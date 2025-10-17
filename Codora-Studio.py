@@ -144,6 +144,7 @@ class LineNumberArea(QWidget):
 
         context_menu.exec_(editor.mapToGlobal(position))
 
+
 # ----------------------------------------------------------------------------------------------------------------------------Classe IDE
 class IDE(QMainWindow):
     def __init__(self):
@@ -218,17 +219,17 @@ class IDE(QMainWindow):
                 color: white;
                 border: none;
             }
-            
+
             QHeaderView::section {
                 background-color: #38393c;
                 color: white;
                 border: none;
             }
-            
+
             QScrollBar:horizontal {
                 background: #38393c;
             }
-            
+
             QScrollBar::handle:horizontal {
                 background: #56585d;
                 min-height: 10px;
@@ -257,7 +258,7 @@ class IDE(QMainWindow):
             QSplitter {
                 background-color: #38393c;
             }
-            
+
              QSplitter::handle {
                 background-color: #38393c;
              }
@@ -298,21 +299,21 @@ class IDE(QMainWindow):
                 background-color: #131e23;
                 color: white;
             }
- 
+
             QMenuBar::item {
                 background-color: transparent;
                 padding: 6px 10px;
                 border-radius: 5px;
             }
-                
+
             QMenuBar::item:selected {
                 background-color: #0297cd;
             }
-                
+
             QMenuBar::item:pressed {
                 background-color: #01719a;
             }
-            
+
             QMenu {
                 background-color: #131e23;
                 color: white;
@@ -488,6 +489,14 @@ class IDE(QMainWindow):
         new_tab_action.triggered.connect(lambda: self.add_new_tab())
         editor_menu.addAction(new_tab_action)
 
+        # ------------------------------------------------Run
+        editor_menu = self.menuBar().addMenu("&Run")
+
+        run_code_action = QAction(QIcon("assets/play.png"), "Run code", self)
+        run_code_action.setStatusTip("Execute the code in a new terminal")
+        run_code_action.triggered.connect(self.execute_code)
+        editor_menu.addAction(run_code_action)
+
         # --------------------------------------------------------------Tool Bar
         self.toolbar = QToolBar()
         self.toolbar.setFixedHeight(45)
@@ -557,7 +566,6 @@ class IDE(QMainWindow):
         self.execute_code_button = QPushButton()
         self.execute_code_button.setIcon(QIcon("assets/play.png"))
         self.execute_code_button.clicked.connect(lambda: self.execute_code(self.current_editor()))
-
 
         self.toolbar.addWidget(self.select_folder_button)
         self.toolbar.addWidget(self.new_tab_button)
@@ -634,7 +642,6 @@ class IDE(QMainWindow):
             with open(temp_path, "w", encoding="utf-8") as f:
                 f.write(editor.toPlainText())
             script_path = temp_path
-            print("bad")
 
         if not os.path.exists(script_path):
             print(f"[ERROR] -- File {script_path} not found")
@@ -714,7 +721,8 @@ class IDE(QMainWindow):
             self.highlight_text(editor, search)
         else:
             self.search_bar.clear()
-            QMessageBox.information(self, "Warning", "The expression : \""+ search+ "\" is not in the text" ,QMessageBox.Ok)
+            QMessageBox.information(self, "Warning", "The expression : \"" + search + "\" is not in the text",
+                                    QMessageBox.Ok)
 
     # --------------------------------------------------------------Faire une recherche dans le code (Partie 2)
     def highlight_text(self, editor, search):
@@ -843,7 +851,8 @@ class IDE(QMainWindow):
             self.command_bar.clear()
         else:
             self.command_bar.clear()
-            QMessageBox.warning(self,"Warning","This command does not exist. Please verify or look at the help.", QMessageBox.Ok)
+            QMessageBox.warning(self, "Warning", "This command does not exist. Please verify or look at the help.",
+                                QMessageBox.Ok)
 
     # --------------------------------------------------------------Ouvrir le terminal
     def open_terminal(self):
@@ -1042,7 +1051,8 @@ class IDE(QMainWindow):
     # --------------------------------------------------------------Ouvrir un fichier
     def file_open(self, file_type, extension):
         options = QFileDialog.Options()
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", f"untitled{extension}", file_type, options=options)
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", f"untitled{extension}", file_type,
+                                                   options=options)
 
         if file_path:
             try:
@@ -1159,7 +1169,8 @@ class IDE(QMainWindow):
             line_number = cursor.blockNumber() + 1
             column_number = cursor.columnNumber()
 
-            self.status_label.setText(f"Line : {line_number} | Column : {column_number} | Characters : {len(editor.toPlainText())}")
+            self.status_label.setText(
+                f"Line : {line_number} | Column : {column_number} | Characters : {len(editor.toPlainText())}")
         else:
             self.status_label.setText("Line : - | Column : - | Characters : -")
 
